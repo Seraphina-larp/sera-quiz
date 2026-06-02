@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>沙拉嘿喲．戀愛實驗所</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0f0e0c;--gold:#c9a96e;--gold2:#e8c98a;--cream:#f0e8d8;--blush:#d4907a;--sage:#8aab96;--mist:#a8b8c4;--txt:#ede5d4;--sub:#b8ad9e;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--ink);color:var(--txt);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.17;animation:drift 18s ease-in-out infinite alternate;}
+.b1{width:600px;height:600px;background:#4a3820;top:-200px;left:-100px;}
+.b2{width:400px;height:400px;background:#1e3040;top:30%;right:-100px;animation-delay:-5s;}
+.b3{width:500px;height:300px;background:#2d1f14;bottom:0;left:20%;animation-delay:-10s;}
+.b4{width:300px;height:500px;background:#1a2d20;top:50%;left:50%;animation-delay:-7s;}
+@keyframes drift{from{transform:translate(0,0) scale(1);}to{transform:translate(40px,30px) scale(1.1);}}
+.stars{position:fixed;inset:0;z-index:1;pointer-events:none;}
+.star{position:absolute;border-radius:50%;background:var(--gold);animation:twinkle var(--d) ease-in-out infinite alternate;opacity:var(--o);}
+@keyframes twinkle{from{opacity:var(--o);}to{opacity:calc(var(--o)*.12);}}
+@keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.audio-btn{position:fixed;top:18px;right:18px;z-index:300;width:40px;height:40px;border-radius:50%;border:1px solid rgba(201,169,110,.4);background:rgba(15,14,12,.85);color:var(--gold);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:.3s;backdrop-filter:blur(10px);}
+.audio-btn:hover{border-color:var(--gold);}
+.wrap{position:relative;z-index:10;max-width:720px;margin:0 auto;padding:0 24px;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+.scr{width:100%;display:none;flex-direction:column;align-items:center;animation:fadeUp .7s ease forwards;}
+.scr.on{display:flex;}
+/* INTRO */
+#si{min-height:100vh;justify-content:center;text-align:center;padding:60px 0;}
+.site-name{font-family:'Noto Sans TC',sans-serif;font-size:11px;letter-spacing:7px;color:var(--gold);opacity:.6;margin-bottom:10px;}
+.site-dot{color:var(--gold);opacity:.4;margin:0 4px;}
+.intro-deco{font-family:'Noto Sans TC',sans-serif;font-size:10px;letter-spacing:6px;color:var(--gold);opacity:.45;margin-bottom:34px;}
+.intro-svg{width:170px;height:170px;margin:0 auto 32px;animation:floatY 6s ease-in-out infinite;}
+.main-ttl{font-family:'Noto Serif TC',serif;font-size:clamp(26px,5.5vw,42px);font-weight:400;color:var(--cream);line-height:1.55;margin-bottom:16px;}
+.main-sub{font-size:13px;color:var(--sub);line-height:2.1;letter-spacing:.8px;margin-bottom:14px;max-width:360px;}
+.poem{font-family:'Noto Sans TC',sans-serif;font-size:13px;color:var(--gold);opacity:.68;letter-spacing:3px;margin-bottom:44px;line-height:2.4;}
+/* REGISTER */
+#sr{min-height:100vh;justify-content:center;text-align:center;padding:60px 0;}
+.reg-deco{font-family:'Noto Sans TC',sans-serif;font-size:10px;letter-spacing:6px;color:var(--gold);opacity:.55;margin-bottom:26px;}
+.reg-ttl{font-family:'Noto Serif TC',serif;font-size:clamp(20px,4vw,30px);color:var(--cream);margin-bottom:10px;font-weight:400;}
+.reg-sub{font-size:13px;color:var(--sub);margin-bottom:40px;line-height:2;letter-spacing:.5px;}
+.inp-grp{width:100%;max-width:400px;margin-bottom:18px;text-align:left;}
+.inp-lbl{font-size:10px;letter-spacing:4px;color:var(--gold);opacity:.78;display:block;margin-bottom:9px;font-family:'Noto Sans TC',sans-serif;}
+.txt-inp{width:100%;padding:13px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(201,169,110,.22);color:var(--txt);font-family:'Noto Serif TC',serif;font-size:15px;letter-spacing:.8px;outline:none;transition:.3s;}
+.txt-inp::placeholder{color:var(--sub);opacity:.42;}
+.txt-inp:focus{border-color:var(--gold);}
+.gender-row{display:flex;gap:10px;width:100%;max-width:400px;margin-bottom:32px;}
+.g-btn{flex:1;padding:13px 6px;background:rgba(255,255,255,.02);border:1px solid rgba(201,169,110,.18);color:var(--sub);font-family:'Noto Serif TC',serif;font-size:13px;letter-spacing:2px;cursor:pointer;transition:.3s;}
+.g-btn.sel,.g-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,169,110,.05);}
+.err{font-size:11px;color:var(--blush);min-height:16px;margin-bottom:14px;letter-spacing:.5px;}
+.gold-btn{padding:14px 42px;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Noto Serif TC',serif;font-size:14px;letter-spacing:4px;cursor:pointer;transition:.4s;position:relative;overflow:hidden;}
+.gold-btn::before{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:.4s;z-index:-1;}
+.gold-btn:hover{color:var(--ink);}
+.gold-btn:hover::before{transform:scaleX(1);}
+/* QUIZ */
+#sq{padding:60px 0 80px;}
+.prog-wrap{width:100%;margin-bottom:42px;}
+.prog-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--sub);letter-spacing:2px;margin-bottom:9px;font-family:'Noto Sans TC',sans-serif;}
+.prog-track{width:100%;height:1px;background:rgba(201,169,110,.15);}
+.prog-fill{height:100%;background:var(--gold);transition:width .6s ease;position:relative;}
+.prog-fill::after{content:'';position:absolute;right:-3px;top:-3px;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+.q-deco{font-family:'Noto Sans TC',sans-serif;font-size:10px;color:var(--gold);opacity:.42;letter-spacing:5px;margin-bottom:20px;text-align:center;}
+.q-illus{width:100px;height:100px;margin:0 auto 26px;}
+.q-txt{font-family:'Noto Serif TC',serif;font-size:clamp(18px,3.5vw,25px);color:var(--cream);text-align:center;line-height:1.75;margin-bottom:9px;}
+.q-sub{font-size:12px;color:var(--sub);text-align:center;letter-spacing:.4px;margin-bottom:36px;font-style:italic;line-height:1.9;}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;}
+.opt{padding:17px 15px;background:rgba(255,255,255,.02);border:1px solid rgba(201,169,110,.15);color:var(--txt);font-family:'Noto Serif TC',serif;font-size:13px;line-height:1.7;cursor:pointer;text-align:left;transition:.3s;position:relative;overflow:hidden;}
+.opt::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(201,169,110,.07),transparent);opacity:0;transition:.3s;}
+.opt:hover{border-color:var(--gold);color:var(--cream);}
+.opt:hover::before{opacity:1;}
+.opt-em{display:block;font-size:21px;margin-bottom:7px;}
+/* RESULT */
+#sres{padding:60px 0 80px;text-align:center;}
+.res-deco{font-family:'Noto Sans TC',sans-serif;font-size:10px;color:var(--gold);letter-spacing:6px;opacity:.62;margin-bottom:26px;}
+.res-illus{width:140px;height:140px;margin:0 auto 26px;animation:floatY 6s ease-in-out infinite;}
+.res-lbl{font-size:10px;letter-spacing:5px;color:var(--sub);margin-bottom:12px;font-family:'Noto Sans TC',sans-serif;}
+.res-ttl{font-family:'Noto Serif TC',serif;font-size:clamp(22px,4.5vw,36px);color:var(--cream);margin-bottom:7px;font-weight:400;line-height:1.45;}
+.res-sub2{font-family:'Noto Sans TC',sans-serif;font-size:14px;color:var(--gold);letter-spacing:3px;margin-bottom:26px;opacity:.8;}
+.res-desc{font-size:13px;color:var(--sub);line-height:2.3;margin-bottom:34px;max-width:520px;}
+.divider{width:55px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:26px auto;}
+.bks-ttl{font-size:10px;letter-spacing:5px;color:var(--gold);margin-bottom:16px;text-align:center;opacity:.72;font-family:'Noto Sans TC',sans-serif;}
+.bk{padding:14px 17px;border:1px solid rgba(201,169,110,.13);margin-bottom:9px;background:rgba(255,255,255,.016);transition:.3s;text-align:left;}
+.bk:hover{border-color:rgba(201,169,110,.32);}
+.bk-tag{display:inline-block;font-size:9px;letter-spacing:3px;color:var(--gold);border:1px solid rgba(201,169,110,.36);padding:1px 8px;margin-bottom:7px;font-family:'Noto Sans TC',sans-serif;}
+.bk-name{font-family:'Noto Serif TC',serif;font-size:16px;color:var(--cream);margin-bottom:4px;}
+.bk-note{font-size:11px;color:var(--sub);line-height:1.8;}
+.ch-mark{display:flex;align-items:center;gap:12px;width:100%;margin:32px 0 24px;color:var(--gold);opacity:.38;font-size:10px;letter-spacing:4px;font-family:'Noto Sans TC',sans-serif;}
+.ch-mark::before,.ch-mark::after{content:'';flex:1;height:1px;background:currentColor;opacity:.4;}
+.tip-box{width:100%;border:1px solid rgba(201,169,110,.18);padding:20px 24px;margin-top:26px;background:rgba(201,169,110,.03);position:relative;text-align:left;}
+.tip-box::before{content:'\275D';position:absolute;top:-12px;left:16px;background:var(--ink);color:var(--gold);font-size:18px;padding:0 7px;}
+.tip-txt{font-size:12px;color:var(--sub);line-height:2.2;}
+.tip-txt strong{color:var(--gold);font-weight:400;}
+.retry-btn{margin-top:42px;padding:12px 36px;background:transparent;border:1px solid rgba(201,169,110,.3);color:var(--sub);font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:3px;cursor:pointer;transition:.3s;}
+.retry-btn:hover{border-color:var(--gold);color:var(--gold);}
+/* COUPON */
+.cpn-ov{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;}
+.cpn-box{max-width:390px;width:100%;background:linear-gradient(145deg,#1c1912,#0f0e0c);border:1px solid var(--gold);position:relative;padding:46px 30px 30px;box-shadow:0 0 60px rgba(201,169,110,.18),inset 0 0 50px rgba(201,169,110,.025);animation:cpnPop .55s cubic-bezier(.34,1.56,.64,1) forwards;}
+@keyframes cpnPop{from{opacity:0;transform:scale(.82) translateY(18px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.cpn-spark{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--ink);padding:0 14px;font-size:20px;letter-spacing:3px;}
+.cpn-c{position:absolute;width:14px;height:14px;border-color:var(--gold2);border-style:solid;opacity:.42;}
+.cpn-c.tl{top:7px;left:7px;border-width:1px 0 0 1px;}.cpn-c.tr{top:7px;right:7px;border-width:1px 1px 0 0;}
+.cpn-c.bl{bottom:7px;left:7px;border-width:0 0 1px 1px;}.cpn-c.br{bottom:7px;right:7px;border-width:0 1px 1px 0;}
+.cpn-lbl{font-family:'Noto Sans TC',sans-serif;font-size:9px;letter-spacing:6px;color:var(--gold);opacity:.62;text-align:center;margin-bottom:10px;}
+.cpn-title{font-family:'Noto Serif TC',serif;font-size:18px;color:var(--cream);text-align:center;margin-bottom:4px;font-weight:400;}
+.cpn-amt{font-family:'Noto Serif TC',serif;font-size:58px;color:var(--gold);text-align:center;font-weight:300;line-height:1;margin-bottom:2px;}
+.cpn-unit{font-size:11px;color:var(--sub);text-align:center;letter-spacing:3px;margin-bottom:16px;font-family:'Noto Sans TC',sans-serif;}
+.cpn-hr{border:none;border-top:1px dashed rgba(201,169,110,.26);margin:14px 0;}
+.cpn-code-lbl{font-family:'Noto Sans TC',sans-serif;font-size:9px;letter-spacing:4px;color:var(--sub);text-align:center;margin-bottom:5px;}
+.cpn-code-val{font-family:'Noto Serif TC',serif;font-size:19px;color:var(--gold2);text-align:center;letter-spacing:5px;margin-bottom:12px;}
+.cpn-for{font-size:12px;color:var(--sub);text-align:center;margin-bottom:4px;}
+.cpn-note{font-size:10px;color:rgba(184,173,158,.42);text-align:center;line-height:1.8;margin-bottom:16px;}
+.cpn-shot{font-family:'Noto Sans TC',sans-serif;font-size:10px;color:var(--blush);text-align:center;letter-spacing:1px;margin-bottom:18px;}
+.cpn-close{width:100%;padding:12px;background:transparent;border:1px solid rgba(201,169,110,.3);color:var(--sub);font-family:'Noto Serif TC',serif;font-size:12px;letter-spacing:3px;cursor:pointer;transition:.3s;}
+.cpn-close:hover{border-color:var(--gold);color:var(--gold);}
+/* footer */
+.footer{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);font-family:'Noto Sans TC',sans-serif;font-size:9px;letter-spacing:3px;color:rgba(201,169,110,.22);white-space:nowrap;z-index:5;}
+@media(max-width:480px){.opts{grid-template-columns:1fr;}.wrap{padding:0 14px;}.cpn-box{padding:42px 18px 26px;}}
+</style>
+</head>
+<body>
+<div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="blob b4"></div></div>
+<div class="stars" id="stars"></div>
+<button class="audio-btn" id="abtn" onclick="toggleAudio()">&#127925;</button>
+<div class="footer">沙拉嘿喲 &middot; 戀愛實驗所</div>
+<audio id="bgm" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" type="audio/mpeg"></audio>
+
+<!-- Coupon -->
+<div class="cpn-ov" id="cpnOv" style="display:none;">
+  <div class="cpn-box">
+    <div class="cpn-spark">&#10024;&#127873;&#10024;</div>
+    <div class="cpn-c tl"></div><div class="cpn-c tr"></div><div class="cpn-c bl"></div><div class="cpn-c br"></div>
+    <div class="cpn-lbl">&#10022;&nbsp;&nbsp;隱藏獎勵&nbsp;&nbsp;&#10022;</div>
+    <div class="cpn-title">恭喜你抽到了</div>
+    <div class="cpn-amt">$50</div>
+    <div class="cpn-unit">情感本折價券</div>
+    <hr class="cpn-hr">
+    <div class="cpn-code-lbl">專屬序號</div>
+    <div class="cpn-code-val" id="cpnCode">—</div>
+    <div class="cpn-for" id="cpnFor">—</div>
+    <div class="cpn-note">憑此截圖，約本享折抵 $50 優惠<br>每人限用一次，不可轉讓</div>
+    <div class="cpn-shot">&#128247; 請截圖保存此畫面</div>
+    <button class="cpn-close" onclick="closeCpn()">我已截圖，繼續查看結果</button>
+  </div>
+</div>
+
+<div class="wrap">
+<!-- INTRO -->
+<div class="scr on" id="si">
+  <div class="site-name">沙拉嘿喲<span class="site-dot">．</span>戀愛實驗所</div>
+  <div class="intro-deco">&#10022;&nbsp;&nbsp;情感本測驗&nbsp;&nbsp;&#10022;</div>
+  <div class="intro-svg">
+    <svg viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="70" stroke="#c9a96e" stroke-width=".5" stroke-dasharray="4 6" opacity=".26"/>
+      <path d="M100 30C60 30,35 60,35 100C35 140,60 170,100 170C80 155,68 130,68 100C68 70,80 45,100 30Z" fill="#c9a96e" opacity=".11" stroke="#c9a96e" stroke-width=".8" stroke-opacity=".42"/>
+      <rect x="72" y="85" width="56" height="42" rx="2" stroke="#e8c98a" stroke-width=".8" fill="none" opacity=".52"/>
+      <line x1="100" y1="85" x2="100" y2="127" stroke="#e8c98a" stroke-width=".8" opacity=".52"/>
+      <line x1="80" y1="97" x2="96" y2="97" stroke="#e8c98a" stroke-width=".5" opacity=".35"/>
+      <line x1="80" y1="104" x2="96" y2="104" stroke="#e8c98a" stroke-width=".5" opacity=".35"/>
+      <line x1="80" y1="111" x2="96" y2="111" stroke="#e8c98a" stroke-width=".5" opacity=".35"/>
+      <line x1="104" y1="97" x2="120" y2="97" stroke="#e8c98a" stroke-width=".5" opacity=".35"/>
+      <line x1="104" y1="104" x2="120" y2="104" stroke="#e8c98a" stroke-width=".5" opacity=".35"/>
+      <line x1="104" y1="111" x2="120" y2="111" stroke="#e8c98a" stroke-width=".5" opacity=".35"/>
+      <circle cx="60" cy="65" r="1.5" fill="#c9a96e" opacity=".42"/>
+      <circle cx="148" cy="72" r="1" fill="#c9a96e" opacity=".35"/>
+      <circle cx="52" cy="135" r="1.5" fill="#c9a96e" opacity=".28"/>
+    </svg>
+  </div>
+  <h1 class="main-ttl">你是哪一種<br>情感的人</h1>
+  <p class="main-sub">每個人心裡都藏著不同的溫度<br>有人渴望在校園的走廊尋回舊夢<br>有人只想在咖啡館的角落安靜哭一場</p>
+  <div class="poem">此刻你的心<br>像哪一種天氣</div>
+  <button class="gold-btn" onclick="goReg()">開始測驗</button>
+</div>
+
+<!-- REGISTER -->
+<div class="scr" id="sr">
+  <div class="reg-deco">&#10022;&nbsp;&nbsp;讓沙拉更認識你&nbsp;&nbsp;&#10022;</div>
+  <h2 class="reg-ttl">先告訴我你是誰</h2>
+  <p class="reg-sub">這樣結果會更貼近你</p>
+  <div class="inp-grp">
+    <label class="inp-lbl">你的暱稱</label>
+    <input class="txt-inp" type="text" id="nick" placeholder="輸入你的暱稱" maxlength="20" autocomplete="off">
+  </div>
+  <div class="inp-grp" style="margin-bottom:10px;">
+    <label class="inp-lbl">你的性別</label>
+  </div>
+  <div class="gender-row">
+    <button class="g-btn" id="gf" onclick="pickG('女生')">女生</button>
+    <button class="g-btn" id="gm" onclick="pickG('男生')">男生</button>
+    <button class="g-btn" id="gn" onclick="pickG('不設限')">不設限</button>
+  </div>
+  <div class="err" id="regErr"></div>
+  <button class="gold-btn" onclick="submitReg()">進入測驗</button>
+</div>
+
+<!-- QUIZ -->
+<div class="scr" id="sq">
+  <div class="prog-wrap">
+    <div class="prog-lbl"><span id="pTxt">第 1 題</span><span id="pFrac">1 / 7</span></div>
+    <div class="prog-track"><div class="prog-fill" id="pFill" style="width:14%"></div></div>
+  </div>
+  <div class="q-deco" id="qDeco"></div>
+  <div class="q-illus" id="qIllus"></div>
+  <h2 class="q-txt" id="qTxt"></h2>
+  <p class="q-sub" id="qSub"></p>
+  <div class="opts" id="opts"></div>
+</div>
+
+<!-- RESULT -->
+<div class="scr" id="sres">
+  <div class="res-deco">&#10022; 測驗完成 &#10022;</div>
+  <div class="res-illus" id="resIllus"></div>
+  <div class="res-lbl">你的情感本類型</div>
+  <h2 class="res-ttl" id="resTtl"></h2>
+  <div class="res-sub2" id="resSub"></div>
+  <p class="res-desc" id="resDesc"></p>
+  <div class="divider"></div>
+  <div class="ch-mark">為你推薦的本</div>
+  <div id="bks"></div>
+  <div class="tip-box" id="tipBox"></div>
+  <button class="retry-btn" onclick="reset()">再測一次</button>
+</div>
+</div>
+
+<script>
+(function(){
+  var s=document.getElementById('stars');
+  for(var i=0;i<55;i++){
+    var el=document.createElement('div');el.className='star';
+    var sz=Math.random()>.75?2:1;
+    el.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;--d:'+(3+Math.random()*6)+'s;--o:'+(0.08+Math.random()*0.38)+';width:'+sz+'px;height:'+sz+'px;animation-delay:'+(Math.random()*8)+'s';
+    s.appendChild(el);
+  }
+})();
+var _aud=false;
+function toggleAudio(){
+  var a=document.getElementById('bgm'),b=document.getElementById('abtn');
+  if(_aud){a.pause();b.innerHTML='&#128263;';_aud=false;}
+  else{a.play().catch(function(){});b.innerHTML='&#127925;';_aud=true;}
+}
+// ── Google Form submission ──
+var _FORM_ID='1FAIpQLSf7jQugILbWb5rczkOx2veLZP4zM-kVTa6cAi4DnKV-wz2omw';
+var _FORM_URL='https://docs.google.com/forms/d/e/'+_FORM_ID+'/formResponse';
+function _sr2(r){
+  var fd=new FormData();
+  fd.append('entry.995088896', r.nickname||'');
+  fd.append('entry.113909690', r.gender||'');
+  fd.append('entry.318947473', r.resultType||'');
+  fd.append('entry.1309127573', r.coupon||'（無）');
+  fd.append('entry.780400167', r.ts||'');
+  // Use no-cors fetch — Google Form doesn't need a response
+  fetch(_FORM_URL,{method:'POST',mode:'no-cors',body:fd}).catch(function(){});
+}
+var cQ=0,scr={},uN='',uG='';
+function showScr(id){
+  document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goReg(){showScr('sr');}
+function pickG(g){
+  uG=g;
+  document.querySelectorAll('.g-btn').forEach(function(b){b.classList.remove('sel');});
+  var m={'女生':'gf','男生':'gm','不設限':'gn'};
+  if(m[g])document.getElementById(m[g]).classList.add('sel');
+}
+function submitReg(){
+  var n=document.getElementById('nick').value.trim();
+  var e=document.getElementById('regErr');
+  if(!n){e.textContent='請輸入暱稱 🥺';return;}
+  if(!uG){e.textContent='請選擇性別';return;}
+  e.textContent='';uN=n;startQ();
+}
+var Qs=[
+  {d:'&#10022; 第一道問',il:'moon',t:'你今天的心情，像哪一種天氣？',s:'不需要想太多，跟著直覺走',o:[
+    {e:'🌤',t:'晴時多雲，說不上開心也不太難過',v:{warm:2,campus:1}},
+    {e:'🌧',t:'有點想哭，但說不清楚為什麼',v:{deep:2,art:1}},
+    {e:'⛅',t:'懶洋洋的，想窩在哪個角落什麼都不做',v:{cozy:2,warm:1}},
+    {e:'🌪',t:'心裡有點亂，像有什麼事情要發生',v:{drama:2,deep:1}}
+  ]},
+  {d:'&#10022; 第二道問',il:'book',t:'如果今天可以消失一個下午，你最想做什麼？',s:'給自己一個不需要理由的午後',o:[
+    {e:'☕',t:'一個人坐在咖啡館，發呆、聽歌、看窗外的人',v:{cozy:2,art:1}},
+    {e:'📖',t:'找一本書，把自己整個人藏進去',v:{deep:2,art:1}},
+    {e:'🎡',t:'和朋友去逛街，吃好吃的，說說廢話',v:{warm:2,campus:1}},
+    {e:'🌊',t:'去海邊，讓風把什麼都吹走',v:{drama:2,deep:1}}
+  ]},
+  {d:'&#10022; 第三道問',il:'flower',t:'你對「哭」這件事的態度是？',s:'眼淚落下的那一刻，你是什麼感覺',o:[
+    {e:'😊',t:'哭完會神清氣爽，很解壓的一件事',v:{warm:1,drama:2}},
+    {e:'🤫',t:'一個人偷偷哭，不想被人看見',v:{deep:2,art:1}},
+    {e:'🙅',t:'很少哭，情感表達不太用眼淚',v:{solo:2,warm:1}},
+    {e:'🫂',t:'最好有人在旁邊，邊哭邊說話',v:{campus:2,warm:1}}
+  ]},
+  {d:'&#10022; 第四道問',il:'star',t:'說起「喜歡」這兩個字，你覺得……',s:'那個怦然心動的瞬間，住在你的哪裡',o:[
+    {e:'📝',t:'喜歡是值得被好好記錄的事，想留下痕跡',v:{art:2,deep:1}},
+    {e:'😳',t:'很久沒認真喜歡一個人了，有點陌生',v:{solo:2,drama:1}},
+    {e:'🎠',t:'喜歡應該要快樂，不要太累',v:{warm:2,campus:1}},
+    {e:'🌹',t:'喜歡一個人就要轟轟烈烈，留點故事給自己',v:{drama:2,campus:1}}
+  ]},
+  {d:'&#10022; 第五道問',il:'moon',t:'玩情感本時，你最希望體驗什麼？',s:'你來這裡，是為了什麼',o:[
+    {e:'🧃',t:'吃好東西，笑得開心，玩完心情變好',v:{cozy:3,warm:1}},
+    {e:'🎭',t:'被一個很好的故事牽著走，忘記自己',v:{drama:2,deep:1}},
+    {e:'🪞',t:'聊自己、認識自己，也認識對方',v:{solo:3,art:1}},
+    {e:'🌸',t:'回到某種學生時代的純粹感覺',v:{campus:3}}
+  ]},
+  {d:'&#10022; 第六道問',il:'flower',t:'你最近的狀態更像哪一句話？',s:'誠實選，不要選你覺得美的那個',o:[
+    {e:'🌿',t:'過得還不錯，但有時候還是想被好好珍惜',v:{warm:2,cozy:1}},
+    {e:'🌑',t:'有些事說不出口，藏著藏著就習慣了',v:{deep:2,art:1}},
+    {e:'💫',t:'最近很忙，但感覺心裡空了一塊',v:{solo:2,drama:1}},
+    {e:'🎈',t:'想玩！想笑！不要想那麼多！',v:{warm:2,campus:2}}
+  ]},
+  {d:'&#10022; 第七道問',il:'star',t:'玩完這本情感本，你希望自己……',s:'最後一個問題，問你想要什麼',o:[
+    {e:'✨',t:'帶著一點感動，覺得戀愛還是美好的',v:{warm:2,drama:1}},
+    {e:'🌙',t:'有點說不清楚的餘韻，心裡多了一點什麼',v:{deep:2,art:2}},
+    {e:'🍜',t:'很飽、很快樂，下次還要來',v:{cozy:3}},
+    {e:'🪐',t:'更了解自己一點，也更了解對方',v:{solo:3,art:1}}
+  ]}
+];
+var SVG={
+  moon:'<svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="45" stroke="#c9a96e" stroke-width=".5" stroke-dasharray="3 5" opacity=".26"/><path d="M60 18C38 18,22 36,22 60C22 84,38 102,60 102C46 92,38 77,38 60C38 43,46 28,60 18Z" fill="#c9a96e" opacity=".11" stroke="#c9a96e" stroke-width=".8" stroke-opacity=".42"/><circle cx="45" cy="45" r="2" fill="#c9a96e" opacity=".36"/><circle cx="38" cy="65" r="1.5" fill="#c9a96e" opacity=".26"/></svg>',
+  book:'<svg viewBox="0 0 120 120" fill="none"><rect x="25" y="30" width="70" height="60" rx="3" stroke="#c9a96e" stroke-width=".8" fill="none" opacity=".36"/><line x1="60" y1="30" x2="60" y2="90" stroke="#c9a96e" stroke-width=".8" opacity=".36"/><line x1="33" y1="48" x2="56" y2="48" stroke="#c9a96e" stroke-width=".5" opacity=".28"/><line x1="33" y1="58" x2="56" y2="58" stroke="#c9a96e" stroke-width=".5" opacity=".28"/><line x1="33" y1="68" x2="56" y2="68" stroke="#c9a96e" stroke-width=".5" opacity=".28"/><line x1="64" y1="48" x2="87" y2="48" stroke="#c9a96e" stroke-width=".5" opacity=".28"/><line x1="64" y1="58" x2="87" y2="58" stroke="#c9a96e" stroke-width=".5" opacity=".28"/></svg>',
+  flower:'<svg viewBox="0 0 120 120" fill="none"><ellipse cx="60" cy="35" rx="8" ry="18" fill="#c9a96e" fill-opacity=".09" stroke="#c9a96e" stroke-width=".6" stroke-opacity=".35"/><ellipse cx="60" cy="35" rx="8" ry="18" fill="#c9a96e" fill-opacity=".07" stroke="#c9a96e" stroke-width=".6" stroke-opacity=".3" transform="rotate(60 60 60)"/><ellipse cx="60" cy="35" rx="8" ry="18" fill="#c9a96e" fill-opacity=".07" stroke="#c9a96e" stroke-width=".6" stroke-opacity=".3" transform="rotate(120 60 60)"/><ellipse cx="60" cy="35" rx="8" ry="18" fill="#c9a96e" fill-opacity=".05" stroke="#c9a96e" stroke-width=".5" stroke-opacity=".25" transform="rotate(180 60 60)"/><ellipse cx="60" cy="35" rx="8" ry="18" fill="#c9a96e" fill-opacity=".05" stroke="#c9a96e" stroke-width=".5" stroke-opacity=".25" transform="rotate(240 60 60)"/><ellipse cx="60" cy="35" rx="8" ry="18" fill="#c9a96e" fill-opacity=".05" stroke="#c9a96e" stroke-width=".5" stroke-opacity=".25" transform="rotate(300 60 60)"/><circle cx="60" cy="60" r="10" fill="#c9a96e" fill-opacity=".12" stroke="#c9a96e" stroke-width=".8" stroke-opacity=".42"/><circle cx="60" cy="60" r="4" fill="#c9a96e" opacity=".36"/></svg>',
+  star:'<svg viewBox="0 0 120 120" fill="none"><polygon points="60,15 67,45 97,45 73,62 82,92 60,75 38,92 47,62 23,45 53,45" stroke="#c9a96e" stroke-width=".8" fill="#c9a96e" fill-opacity=".05" stroke-linejoin="round" stroke-opacity=".42"/><circle cx="60" cy="60" r="35" stroke="#c9a96e" stroke-width=".3" stroke-dasharray="2 8" opacity=".2"/><circle cx="60" cy="60" r="3" fill="#c9a96e" opacity=".52"/></svg>'
+};
+var RILLUS={
+  warm:'<svg viewBox="0 0 160 160" fill="none"><circle cx="80" cy="80" r="55" stroke="#c9a96e" stroke-width=".5" stroke-dasharray="3 7" opacity=".26"/><path d="M80 30Q95 55 120 60Q95 65 80 90Q65 65 40 60Q65 55 80 30Z" fill="#c9a96e" opacity=".09" stroke="#c9a96e" stroke-width=".8" stroke-opacity=".42"/><circle cx="80" cy="80" r="6" fill="#c9a96e" opacity=".26"/></svg>',
+  drama:'<svg viewBox="0 0 160 160" fill="none"><path d="M80 25C50 25,28 47,28 77C28 107,50 129,80 129C110 129,132 107,132 77C132 47,110 25,80 25Z" stroke="#d4907a" stroke-width=".8" fill="#d4907a" fill-opacity=".04" stroke-opacity=".4"/><path d="M55 77C55 64,65 55,80 55C95 55,105 64,105 77" stroke="#d4907a" stroke-width="1" fill="none" opacity=".36"/><circle cx="65" cy="72" r="3" fill="#d4907a" opacity=".36"/><circle cx="95" cy="72" r="3" fill="#d4907a" opacity=".36"/><path d="M65 97Q80 110 95 97" stroke="#d4907a" stroke-width="1" fill="none" opacity=".36"/></svg>',
+  deep:'<svg viewBox="0 0 160 160" fill="none"><circle cx="80" cy="80" r="50" stroke="#8aab96" stroke-width=".5" stroke-dasharray="1 9" opacity=".26"/><circle cx="80" cy="80" r="35" stroke="#8aab96" stroke-width=".5" stroke-dasharray="2 6" opacity=".2"/><circle cx="80" cy="80" r="20" stroke="#8aab96" stroke-width=".5" opacity=".26"/><circle cx="80" cy="80" r="5" fill="#8aab96" opacity=".36"/></svg>',
+  cozy:'<svg viewBox="0 0 160 160" fill="none"><rect x="45" y="70" width="70" height="50" rx="5" stroke="#c9a96e" stroke-width=".8" fill="none" opacity=".36"/><path d="M65 70L65 55Q65 45 75 45L85 45Q95 45 95 55L95 70" stroke="#c9a96e" stroke-width=".8" fill="none" opacity=".36"/><path d="M45 90Q80 82 115 90" stroke="#c9a96e" stroke-width=".5" fill="none" opacity=".26"/><circle cx="80" cy="95" r="8" stroke="#c9a96e" stroke-width=".5" fill="#c9a96e" fill-opacity=".05" stroke-opacity=".4"/></svg>',
+  campus:'<svg viewBox="0 0 160 160" fill="none"><path d="M30 100L80 40L130 100Z" stroke="#a8b8c4" stroke-width=".8" fill="#a8b8c4" fill-opacity=".04" stroke-opacity=".4"/><rect x="60" y="80" width="40" height="35" stroke="#a8b8c4" stroke-width=".8" fill="none" opacity=".36"/><rect x="70" y="88" width="12" height="12" stroke="#a8b8c4" stroke-width=".5" fill="none" opacity=".26"/><rect x="88" y="88" width="12" height="12" stroke="#a8b8c4" stroke-width=".5" fill="none" opacity=".26"/><line x1="80" y1="40" x2="80" y2="28" stroke="#a8b8c4" stroke-width=".8" opacity=".36"/><circle cx="80" cy="25" r="4" stroke="#a8b8c4" stroke-width=".5" fill="none" opacity=".36"/></svg>',
+  solo:'<svg viewBox="0 0 160 160" fill="none"><circle cx="80" cy="60" r="20" stroke="#c9a96e" stroke-width=".8" fill="none" opacity=".36"/><circle cx="80" cy="60" r="8" fill="#c9a96e" opacity=".09"/><path d="M80 80L80 115" stroke="#c9a96e" stroke-width=".8" opacity=".36"/><path d="M55 95L80 105L105 95" stroke="#c9a96e" stroke-width=".6" fill="none" opacity=".26"/><path d="M80 115L60 135" stroke="#c9a96e" stroke-width=".8" opacity=".36"/><path d="M80 115L100 135" stroke="#c9a96e" stroke-width=".8" opacity=".36"/><circle cx="80" cy="80" r="45" stroke="#c9a96e" stroke-width=".3" stroke-dasharray="1 12" opacity=".16"/></svg>',
+  art:'<svg viewBox="0 0 160 160" fill="none"><path d="M40 120Q60 40,80 80Q100 120,120 40" stroke="#c9a96e" stroke-width="1" fill="none" opacity=".36"/><path d="M35 90Q80 20,125 90" stroke="#c9a96e" stroke-width=".5" fill="none" opacity=".16" stroke-dasharray="3 5"/><circle cx="80" cy="80" r="4" fill="#c9a96e" opacity=".42"/><ellipse cx="80" cy="80" rx="50" ry="25" stroke="#c9a96e" stroke-width=".4" fill="none" opacity=".16" transform="rotate(-15 80 80)"/></svg>'
+};
+var RES={
+  warm:{title:'溫暖系情感人',sub:'你是那種讓人想靠近的溫度',il:'warm',desc:'你不需要轟轟烈烈，你要的是真實的溫度——一杯好喝的東西，一個願意說廢話的人，一個下午可以什麼都不做卻覺得很滿足。你的愛是日常的，是安靜的，卻是最不容易消失的那一種。',books:[{tag:'首推',name:'最浪漫的事',note:'慢慢陪你一起到老，支援客製化求婚，主打日常浪漫'},{tag:'也推',name:'糟糕一不小心成了鬼',note:'歡樂治癒微情感，《我的神明朋友》《橡皮》彩蛋'},{tag:'也推',name:'白八書電',note:'我們都需要有個溫暖的書店'},{tag:'也推',name:'江湖敗類',note:'熱血中二！男生也會喜歡的情感本'},{tag:'也推',name:'菖蒲與梔子花',note:'日常樸實的小故事，溫暖而真實'}],tip:'貼心提示：<strong>「最浪漫的事」</strong>非常適合你，玩法靈活，新手友善，也支援內捲求婚等客製化服務，主打一個開心就好 🌸'},
+  drama:{title:'狗血浪漫型',sub:'你的心裡住著一個苦情主角',il:'drama',desc:'你知道愛情有時候會痛，但你還是願意走進去。你喜歡被故事牽著走，喜歡那種說不清楚的情緒，喜歡哭完之後還是覺得美麗的感覺。你不怕狗血，因為你覺得那就是真實的人生。',books:[{tag:'首推',name:'季風吹過橘色的海',note:'青春校園樂團愛情故事，有換裝，狗血情感都有'},{tag:'也推',name:'告別詩',note:'那些年永遠的十七歲，眼淚備著'},{tag:'也推',name:'洗劫倫敦所有的玫瑰',note:'浪漫洗劫系列，共三部曲'},{tag:'也推',name:'二流貨色',note:'瘋子般的愛情！各自有各自的演繹舞台'},{tag:'也推',name:'沙丘玫瑰苦月亮',note:'美國西部牛仔，浪漫情懷'}],tip:'貼心提示：<strong>「季風吹過橘色的海」</strong>是你的菜，有學生時代的味道，有眼淚，有餘韻，玩完會想再玩一次 🌊'},
+  deep:{title:'深淵詩意型',sub:'你的情感藏在文字的縫隙裡',il:'deep',desc:'你不是不懂愛，你只是不習慣把它說得太直白。你更喜歡繞一圈，用一個比喻、一句意象來表達那些說不出口的事。你需要的不是答案，而是一個能和你一起沉默片刻的人。',books:[{tag:'首推',name:'溺於無明之海',note:'印象派的藝術饗宴，喜歡藝術不要錯過'},{tag:'也推',name:'虛構者的詩',note:'藝文詩集的宿命愛情故事，烏托邦系列'},{tag:'也推',name:'無名之町（上下集）',note:'日式還原，帶腦洞推理，立體人物小傳'},{tag:'也推',name:'世紀末最後一場雪',note:'浪漫的宿命感'}],tip:'貼心提示：<strong>「溺於無明之海」</strong>是你這種靈魂的天堂，帶著你的感受去，你會找到很多共鳴 🖤'},
+  cozy:{title:'食玩治癒型',sub:'你知道好好吃頓飯才是正經事',il:'cozy',desc:'你是個務實的浪漫主義者。你相信最好的情感不一定要驚天動地，一起吃一碗好吃的湯麵，說說今天發生的蠢事，這就夠了。玩完心情好，這才是你最在意的事情。',books:[{tag:'首推',name:'小吊梨湯',note:'食玩系列，名字就很好喝，玩完會餓'},{tag:'也推',name:'老夏咖啡館',note:'有吃有喝有溫度，玩完心情好'},{tag:'也推',name:'橡皮',note:'溫馨治癒的一家人，不怎麼會哭'},{tag:'也推',name:'北緯52度',note:'旅行綜藝風，像背包客青年旅宿般的聊天交談'},{tag:'也推',name:'我的神明朋友',note:'童話治癒的小故事，你相信世界上有神明嗎？'}],tip:'貼心提示：<strong>食玩五本系列</strong>（橡皮、小吊梨湯、從前的月亮是個橘子、小鎮與阿啾、老夏咖啡館）每一本都很好吃 🍊'},
+  campus:{title:'青春校園型',sub:'你心裡還住著那個十七歲的自己',il:'campus',desc:'穿上校服的瞬間，你是不是有點鼻酸？你懷念那段時光——不是因為那時候沒有煩惱，而是因為那時候的情感，純粹得讓人心疼。你想再回去一次，哪怕只是下午兩個小時。',books:[{tag:'首推',name:'告別詩',note:'那些年永遠的十七歲，有換裝穿校服，沉浸感超強'},{tag:'也推',name:'畢業快樂',note:'最好的閨蜜情，那些年永不會忘記的友情'},{tag:'也推',name:'季風吹過橘色的海',note:'青春校園樂團愛情故事，校服換裝'},{tag:'也推',name:'小橘合唱團',note:'快快樂樂的小學生～快樂純友情'}],tip:'貼心提示：<strong>「告別詩」</strong>有換裝，穿上校服那一刻很多人都會有點哽咽，但哭完很值得 🎒'},
+  solo:{title:'自我深掘型',sub:'你來這裡，不只是為了戀愛',il:'solo',desc:'你對自己有很多好奇，也對別人有很多好奇。你喜歡在遊戲裡思考一些更大的問題——什麼是愛，什麼是我，什麼是我和你之間的那個距離。你需要的不是劇情，而是對話。',books:[{tag:'首推',name:'陀螺',note:'聊聊你的感情觀人生觀，吃本人戀愛經歷，帶入感極強'},{tag:'也推',name:'尋找她所在的河流',note:'討論婚戀議題的價值觀想法（男D/女D版）'},{tag:'也推',name:'化妝師',note:'聊聊原生家庭對人的影響，適合想深聊的你'},{tag:'也推',name:'某某3',note:'輕鬆聊聊彼此感情觀人生觀，適合帶曖昧對象deeptalk'},{tag:'也推',name:'信簡',note:'看看別人的愛情，分析個案'}],tip:'貼心提示：<strong>「陀螺」</strong>不吃劇本閱歷，吃的是你的真實經歷與感受，帶著你自己去，你就是這本書最好的主角 🌀'},
+  art:{title:'藝文詩意型',sub:'你用美感感受這個世界',il:'art',desc:'你對文字有偏執的愛，你在乎一個比喻是否精準，一段描述是否有畫面感。你需要的情感本，文筆要好，意象要美，讓你讀完之後覺得——對，這就是我說不出口的感覺。',books:[{tag:'首推',name:'虛構者的詩',note:'藝文詩集的宿命愛情故事，烏托邦系列，有彩蛋'},{tag:'也推',name:'青黎遺事',note:'古風唯美愛情故事，沈妄文風'},{tag:'也推',name:'雲中海蜃',note:'思辨主題，烏托邦系列彩蛋'},{tag:'也推',name:'溺於無明之海',note:'印象派的藝術饗宴，必玩'}],tip:'貼心提示：<strong>烏托邦系列</strong>三本（虛構者的詩、青黎遺事、雲中海蜃）互有彩蛋，文學設計很精緻 ✍️'}
+};
+function startQ(){
+  cQ=0;scr={warm:0,drama:0,deep:0,cozy:0,campus:0,solo:0,art:0};
+  renderQ();showScr('sq');
+}
+function renderQ(){
+  var q=Qs[cQ];
+  document.getElementById('pTxt').textContent='第 '+(cQ+1)+' 題';
+  document.getElementById('pFrac').textContent=(cQ+1)+' / '+Qs.length;
+  document.getElementById('pFill').style.width=(((cQ+1)/Qs.length)*100)+'%';
+  document.getElementById('qDeco').innerHTML=q.d;
+  document.getElementById('qTxt').textContent=q.t;
+  document.getElementById('qSub').textContent=q.s;
+  var ilt=['moon','book','flower','star'];
+  document.getElementById('qIllus').innerHTML=SVG[ilt[cQ%4]];
+  var g=document.getElementById('opts');g.innerHTML='';
+  q.o.forEach(function(op){
+    var b=document.createElement('button');b.className='opt';
+    b.innerHTML='<span class="opt-em">'+op.e+'</span>'+op.t;
+    b.onclick=(function(v){return function(){pick(v);};})(op.v);
+    g.appendChild(b);
+  });
+}
+function pick(v){
+  Object.keys(v).forEach(function(k){scr[k]=(scr[k]||0)+v[k];});
+  cQ++;if(cQ>=Qs.length)showRes();else renderQ();
+}
+function genCode(){
+  var c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',s='SALAD-';
+  for(var i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];s+='-';
+  for(var i=0;i<4;i++)s+=c[Math.floor(Math.random()*c.length)];
+  return s;
+}
+function showCpn(code,nick,gender){
+  document.getElementById('cpnCode').textContent=code;
+  document.getElementById('cpnFor').textContent=nick+'（'+gender+'）專屬';
+  document.getElementById('cpnOv').style.display='flex';
+}
+function closeCpn(){document.getElementById('cpnOv').style.display='none';}
+function showRes(){
+  var sorted=Object.entries(scr).sort(function(a,b){return b[1]-a[1];});
+  var top=sorted[0][0],r=RES[top];
+  document.getElementById('resTtl').textContent=r.title;
+  document.getElementById('resSub').textContent=r.sub;
+  document.getElementById('resDesc').textContent=r.desc;
+  document.getElementById('resIllus').innerHTML=RILLUS[r.il]||RILLUS.warm;
+  var bEl=document.getElementById('bks');
+  bEl.innerHTML='<div class="bks-ttl">&#10022;&nbsp;&nbsp;為你點燈的本&nbsp;&nbsp;&#10022;</div>';
+  r.books.forEach(function(b){
+    bEl.innerHTML+='<div class="bk"><div class="bk-tag">'+b.tag+'</div><div class="bk-name">&#12298;'+b.name+'&#12299;</div><div class="bk-note">'+b.note+'</div></div>';
+  });
+  document.getElementById('tipBox').innerHTML='<p class="tip-txt">'+r.tip+'</p>';
+  var hasCpn=Math.random()<0.30;
+  var code=hasCpn?genCode():null;
+  _sr2({id:Date.now(),nickname:uN,gender:uG,resultType:r.title,resultKey:top,coupon:code,ts:new Date().toISOString()});
+  showScr('sres');
+  if(hasCpn)setTimeout(function(){showCpn(code,uN,uG);},1100);
+}
+function reset(){
+  uN='';uG='';
+  document.getElementById('nick').value='';
+  document.querySelectorAll('.g-btn').forEach(function(b){b.classList.remove('sel');});
+  document.getElementById('regErr').textContent='';
+  showScr('si');
+}
+</script>
+</body>
+</html>
